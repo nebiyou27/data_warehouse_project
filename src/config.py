@@ -1,0 +1,1 @@
+# Configuration file (e.g., database credentials)

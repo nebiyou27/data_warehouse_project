@@ -1,0 +1,6 @@
+# List of dependencies
+
+telethon
+pytest
+flake8
+python-dotenv
