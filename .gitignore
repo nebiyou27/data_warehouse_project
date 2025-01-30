@@ -14,9 +14,7 @@ myenv/
 # Jupyter Notebooks checkpoints
 .ipynb_checkpoints/
 
-# Data files
-data/raw/
-data/preprocessed/
+
 
 
 # Logs
