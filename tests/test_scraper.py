@@ -1,11 +1,7 @@
-import sys
-import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-
 import pytest
 from unittest.mock import MagicMock, call
 from telethon.tl.custom.message import Message
-from src.scraping import scrape_channel
+from scraping import scrape_channel
 
 @pytest.mark.asyncio
 async def test_scrape_channel():
