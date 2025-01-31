@@ -27,12 +27,8 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler(
-            os.path.join(LOGS_DIR, "scraping.log")
-        ),
-        logging.FileHandler(
-            os.path.join(LOGS_DIR, "error.log")
-        ),
+        logging.FileHandler(os.path.join(LOGS_DIR, "scraping.log")),
+        logging.FileHandler(os.path.join(LOGS_DIR, "error.log")),
         logging.StreamHandler()  # Also prints logs to console
     ]
 )
@@ -45,32 +41,31 @@ csv_file_path = os.path.join(TEXT_DATA_DIR, "telegram_data.csv")
 
 async def scrape_channel(client, channel_name, writer, max_messages):
     """Scrape a limited number of messages and images from a Telegram channel."""
-    logger.info(
-        f"Starting to scrape {channel_name} (Max {max_messages} messages)..."
-    )
+    msg = f"Starting to scrape {channel_name} (Max {max_messages} messages)..."
+    logger.info(msg)
 
     try:
-        async for message in client.iter_messages(channel_name, limit=max_messages):
+        async for message in await client.get_messages(
+            channel_name, 
+            limit=max_messages
+        ):
             # Save text messages
             if message.text:
-                writer.writerow(
-                    [channel_name, message.id, message.text, message.date]
-                )
+                row = [channel_name, message.id, message.text, message.date]
+                writer.writerow(row)
 
             # Save images separately
             if message.media and isinstance(message.media, MessageMediaPhoto):
-                image_path = os.path.join(
-                    IMAGE_DATA_DIR, f"{channel_name}_{message.id}.jpg"
-                )
+                image_filename = f"{channel_name}_{message.id}.jpg"
+                image_path = os.path.join(IMAGE_DATA_DIR, image_filename)
                 await client.download_media(message.media, file=image_path)
                 logger.info(f"Saved image: {image_path}")
 
         logger.info(f"Scraping completed for {channel_name}")
 
     except Exception as e:
-        logger.error(
-            f"Error scraping {channel_name}: {str(e)}", exc_info=True
-        )
+        error_msg = f"Error scraping {channel_name}: {str(e)}"
+        logger.error(error_msg, exc_info=True)
 
 
 async def main():
@@ -79,7 +74,8 @@ async def main():
 
     with open(csv_file_path, 'w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
-        writer.writerow(['Channel Name', 'Message ID', 'Message', 'Date'])
+        headers = ['Channel Name', 'Message ID', 'Message', 'Date']
+        writer.writerow(headers)
 
         channels = [
             "@Chemed",
