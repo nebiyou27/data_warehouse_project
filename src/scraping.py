@@ -1,6 +1,5 @@
 import csv
 import os
-import argparse
 import logging
 from dotenv import load_dotenv
 from telethon import TelegramClient
@@ -52,7 +51,9 @@ async def scrape_channel(client, channel_name, writer, max_messages):
 
             # Save images separately
             if message.media and isinstance(message.media, MessageMediaPhoto):
-                image_path = os.path.join(IMAGE_DATA_DIR, f"{channel_name}_{message.id}.jpg")
+                image_path = os.path.join(
+                    IMAGE_DATA_DIR, f"{channel_name}_{message.id}.jpg"
+                )
                 await client.download_media(message.media, file=image_path)
                 logger.info(f"Saved image: {image_path}")
 
