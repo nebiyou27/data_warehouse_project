@@ -12,7 +12,7 @@ def setup_logging():
 
     # Configure the logger
     logging.basicConfig(
-        level=logging.INFO,
+        level=logging.INFO,  # Ensure INFO level is set
         format="%(asctime)s - %(levelname)s - %(message)s",
         handlers=[
             logging.FileHandler(log_file),
@@ -23,4 +23,8 @@ def setup_logging():
 
     # Create logger
     logger = logging.getLogger()
+    
+    # Explicitly set the logging level to INFO in case it's inherited wrongly
+    logger.setLevel(logging.INFO)
+
     return logger

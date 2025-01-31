@@ -3,14 +3,17 @@ import pytest
 from src.logging_config import setup_logging
 
 def test_setup_logging():
-    """Test that logging is set up correctly."""
+    """Test that the logging setup is correct."""
+    # Setup logger using the logging_config
     logger = setup_logging()
 
-    # Ensure logger is an instance of logging.Logger
-    assert isinstance(logger, logging.Logger)
+    # Assert logger is an instance of logging.Logger
+    assert isinstance(logger, logging.Logger), "Logger is not an instance of logging.Logger."
 
-    # Ensure logger has handlers
-    assert len(logger.handlers) > 0
+    # Assert logger has at least one handler
+    assert len(logger.handlers) > 0, "Logger has no handlers."
 
-    # Ensure logging level is set correctly
-    assert logger.level == logging.INFO  # Update to match your actual logging level.
+    # Assert the logging level is correctly set to INFO (or adjust according to your configuration)
+    expected_level = logging.INFO
+    actual_level = logger.level
+    assert actual_level == expected_level, f"Expected logging level {logging.getLevelName(expected_level)}, but got {logging.getLevelName(actual_level)}."

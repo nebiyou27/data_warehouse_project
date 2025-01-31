@@ -5,7 +5,6 @@ from telethon import TelegramClient
 from telethon.tl.types import MessageMediaPhoto
 from src.logging_config import setup_logging
 
-
 # Load environment variables
 load_dotenv()
 
@@ -30,7 +29,6 @@ MAX_MESSAGES = 10000
 # Set up logging
 logger = setup_logging()
 
-
 async def scrape_channel(client, channel_name, writer):
     """
     Scrapes messages and images from a Telegram channel.
@@ -51,7 +49,8 @@ async def scrape_channel(client, channel_name, writer):
 
             # Save text messages
             if message.text:
-                logger.debug(f"Scraping message {message.id}: {message.text[:50]}...")
+                logger.debug(f"Scraping message {message.id}: "
+                             f"{message.text[:50]}...")  # Debugging only first 50 chars
                 writer.writerow([channel_name, message.id, message.text, message.date])
 
             # Save images if present
@@ -66,8 +65,8 @@ async def scrape_channel(client, channel_name, writer):
         logger.error(f"Error scraping {channel_name}: {e}")
         return
 
-    logger.info(f"Scraping {channel_name} completed. {message_count} messages scraped.")
-
+    logger.info(f"Scraping {channel_name} completed. "
+                f"{message_count} messages scraped.")
 
 async def main():
     """
@@ -102,7 +101,6 @@ async def main():
 
     logger.info(f"Text data saved in {csv_file_path}")
     logger.info(f"Images saved in {IMAGE_DATA_DIR}")
-
 
 # Run the main function
 if __name__ == "__main__":
