@@ -27,7 +27,7 @@ csv_file_path = os.path.join(TEXT_DATA_DIR, "telegram_data.csv")
 MAX_MESSAGES = 10000
 
 # Set up logging
-logger = setup_logging()
+logger = setup_logging("logs")  # Specify the log directory
 
 async def scrape_channel(client, channel_name, writer):
     """
@@ -68,6 +68,7 @@ async def scrape_channel(client, channel_name, writer):
     logger.info(f"Scraping {channel_name} completed. "
                 f"{message_count} messages scraped.")
 
+
 async def main():
     """
     Main function to scrape messages from a list of channels.
@@ -101,6 +102,7 @@ async def main():
 
     logger.info(f"Text data saved in {csv_file_path}")
     logger.info(f"Images saved in {IMAGE_DATA_DIR}")
+
 
 # Run the main function
 if __name__ == "__main__":

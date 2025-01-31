@@ -1,39 +1,25 @@
-import os
+from setuptools import setup, find_packages
 
-# Define the folder structure
-folders = [
-    "data/raw",
-    "data/cleaned",
-    "data/images",
-    "data/detections",
-    "data/warehouse",
-    "src",
-    "models",
-    "logs",
-    "tests",
-    "docs"
-]
-
-# Define the files to be created
-files = {
-    "src/scraping.py": "# Script for Telegram data scraping",
-    "src/cleaning.py": "# Script for data cleaning and transformation",
-    "src/yolo_detection.py": "# Script for YOLO object detection",
-    "src/database.py": "# Script for database setup and interactions",
-    "src/api.py": "# FastAPI implementation",
-    "src/config.py": "# Configuration file (e.g., database credentials)",
-    "README.md": "# Medical Data Warehouse Project\n\nThis project involves scraping, processing, and storing medical business data from Telegram.",
-    "requirements.txt": "# List of dependencies",
-    ".gitignore": "*.pyc\npycache/\ndata/raw/\nlogs/"
-}
-
-# Create folders
-for folder in folders:
-    os.makedirs(folder, exist_ok=True)
-
-# Create files
-for file_path, content in files.items():
-    with open(file_path, "w") as f:
-        f.write(content)
-
-print("Project folder structure created successfully!")
+setup(
+    name="medical_data_warehouse",
+    version="0.1",
+    description="A project for scraping, processing, and storing medical business data from Telegram.",
+    author="Nebiyou Abebe",
+    author_email="nebamagna@gmail.com",
+    packages=find_packages(where="src"),  # Find packages in the `src` directory
+    package_dir={"": "src"},  # Specify that packages are located under `src`
+    install_requires=[
+        # Add your project dependencies here
+        "requests",
+        "pandas",
+        "fastapi",
+        "uvicorn",
+    ],
+    python_requires=">=3.8",
+    include_package_data=True,  # Include non-Python files (e.g., data files)
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],
+)

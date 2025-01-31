@@ -1,0 +1,20 @@
+Metadata-Version: 2.2
+Name: medical_data_warehouse
+Version: 0.1
+Summary: A project for scraping, processing, and storing medical business data from Telegram.
+Author: Nebiyou Abebe
+Author-email: nebamagna@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Requires-Dist: requests
+Requires-Dist: pandas
+Requires-Dist: fastapi
+Requires-Dist: uvicorn
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
