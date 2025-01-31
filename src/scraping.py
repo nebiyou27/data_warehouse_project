@@ -27,8 +27,12 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler(os.path.join(LOGS_DIR, "scraping.log")),
-        logging.FileHandler(os.path.join(LOGS_DIR, "error.log")),
+        logging.FileHandler(
+            os.path.join(LOGS_DIR, "scraping.log")
+        ),
+        logging.FileHandler(
+            os.path.join(LOGS_DIR, "error.log")
+        ),
         logging.StreamHandler()  # Also prints logs to console
     ]
 )
@@ -49,7 +53,9 @@ async def scrape_channel(client, channel_name, writer, max_messages):
         async for message in client.iter_messages(channel_name, limit=max_messages):
             # Save text messages
             if message.text:
-                writer.writerow([channel_name, message.id, message.text, message.date])
+                writer.writerow(
+                    [channel_name, message.id, message.text, message.date]
+                )
 
             # Save images separately
             if message.media and isinstance(message.media, MessageMediaPhoto):
