@@ -51,6 +51,7 @@ async def scrape_channel(client, channel_name, writer):
 
             # Save text messages
             if message.text:
+                logger.debug(f"Scraping message {message.id}: {message.text[:50]}...")  # Log the first 50 characters
                 writer.writerow([channel_name, message.id, message.text, message.date])
 
             # Save images if present
@@ -76,26 +77,30 @@ async def main():
         await client.start()
 
         # Open CSV file for writing text data
-        with open(csv_file_path, 'w', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
-            writer.writerow(['Channel Name', 'Message ID', 'Message', 'Date'])
+        try:
+            with open(csv_file_path, 'w', newline='', encoding='utf-8') as file:
+                writer = csv.writer(file)
+                writer.writerow(['Channel Name', 'Message ID', 'Message', 'Date'])
 
-            # List of channels to scrape
-            channels = [
-                "@DoctorsET",
-                "Chemed",
-                "@lobelia4cosmetics",
-                "@yetenaweg",
-                "@EAHCI",
-            ]
+                # List of channels to scrape
+                channels = [
+                    "@DoctorsET",
+                    "Chemed",
+                    "@lobelia4cosmetics",
+                    "@yetenaweg",
+                    "@EAHCI",
+                ]
 
-            # Iterate over the channels and scrape data
-            for channel in channels:
-                await scrape_channel(client, channel, writer)
+                # Iterate over the channels and scrape data
+                for channel in channels:
+                    await scrape_channel(client, channel, writer)
+
+        except Exception as e:
+            logger.error(f"Error opening CSV file for writing: {e}")
+            return
 
     logger.info(f"Text data saved in {csv_file_path}")
     logger.info(f"Images saved in {IMAGE_DATA_DIR}")
-
 
 # Run the main function
 if __name__ == "__main__":

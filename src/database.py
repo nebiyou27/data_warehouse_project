@@ -1,1 +1,0 @@
-# Script for database setup and interactions

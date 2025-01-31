@@ -14,7 +14,8 @@ myenv/
 # Jupyter Notebooks checkpoints
 .ipynb_checkpoints/
 
-
+# Ignore the entire data folder
+data/
 
 
 # Logs
