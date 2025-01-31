@@ -41,7 +41,9 @@ csv_file_path = os.path.join(TEXT_DATA_DIR, "telegram_data.csv")
 
 async def scrape_channel(client, channel_name, writer, max_messages):
     """Scrape a limited number of messages and images from a Telegram channel."""
-    logger.info(f"Starting to scrape {channel_name} (Max {max_messages} messages)...")
+    logger.info(
+        f"Starting to scrape {channel_name} (Max {max_messages} messages)..."
+    )
 
     try:
         async for message in client.iter_messages(channel_name, limit=max_messages):
@@ -51,14 +53,18 @@ async def scrape_channel(client, channel_name, writer, max_messages):
 
             # Save images separately
             if message.media and isinstance(message.media, MessageMediaPhoto):
-                image_path = os.path.join(IMAGE_DATA_DIR, f"{channel_name}_{message.id}.jpg")
+                image_path = os.path.join(
+                    IMAGE_DATA_DIR, f"{channel_name}_{message.id}.jpg"
+                )
                 await client.download_media(message.media, file=image_path)
                 logger.info(f"Saved image: {image_path}")
 
         logger.info(f"Scraping completed for {channel_name}")
 
     except Exception as e:
-        logger.error(f"Error scraping {channel_name}: {str(e)}", exc_info=True)
+        logger.error(
+            f"Error scraping {channel_name}: {str(e)}", exc_info=True
+        )
 
 
 async def main():
