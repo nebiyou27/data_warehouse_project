@@ -1,25 +1,3 @@
-### Error Fix for GitHub CI Workflow
-
-The error you're encountering is due to the deprecated `actions/upload-artifact@v2` version. The action has been updated and `v3` is now the recommended version. 
-
-To resolve this, replace the deprecated `v2` version with `v3` in your CI workflow.
-
-Here’s the fix for your `ci.yml` file:
-
-```yaml
-# Step 7: Upload artifacts (optional, e.g., saving test results or logs)
-- name: Upload test results to GitHub
-  uses: actions/upload-artifact@v3
-  with:
-    name: test-results
-    path: tests/results/
-```
-
-### Best README Based on Folder Structure and Business Need
-
-Here’s a sample README based on your folder structure and business requirements:
-
----
 
 # Medical Data Warehouse Project
 

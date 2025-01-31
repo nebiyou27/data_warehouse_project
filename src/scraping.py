@@ -55,7 +55,9 @@ async def scrape_channel(client, channel_name, writer):
 
             # Save images if present
             if message.media and isinstance(message.media, MessageMediaPhoto):
-                image_path = os.path.join(IMAGE_DATA_DIR, f"{channel_name}_{message.id}.jpg")
+                image_path = os.path.join(
+                    IMAGE_DATA_DIR, f"{channel_name}_{message.id}.jpg"
+                )
                 await client.download_media(message.media, file=image_path)
                 logger.info(f"Saved image: {image_path}")
 
