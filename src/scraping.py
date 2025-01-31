@@ -48,7 +48,7 @@ async def scrape_channel(client, channel_name, writer, max_messages):
     logger.info(msg)
 
     try:
-        async for message in await client.get_messages(
+        async for message in client.iter_messages(
             channel_name, limit=max_messages
         ):
             # Save text messages
@@ -96,3 +96,4 @@ async def main():
 if __name__ == "__main__":
     with TelegramClient('scraping_session', api_id, api_hash) as client:
         client.loop.run_until_complete(main())
+        
