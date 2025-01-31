@@ -28,7 +28,7 @@ csv_file_path = os.path.join(TEXT_DATA_DIR, "telegram_data.csv")
 MAX_MESSAGES = 10000
 
 # Set up logging
-logger = setup_logging("logs")  # Specify the log directory
+logger = setup_logging()  # Now accepts optional log_dir parameter
 
 
 async def scrape_channel(client, channel_name, writer):
@@ -51,13 +51,23 @@ async def scrape_channel(client, channel_name, writer):
 
             # Save text messages
             if message.text:
-                logger.debug(f"Scraping message {message.id}: "
-                             f"{message.text[:50]}...")  # Debugging only first 50 chars
-                writer.writerow([channel_name, message.id, message.text, message.date])
+                debug_msg = (
+                    f"Scraping message {message.id}: {message.text[:50]}..."
+                )
+                logger.debug(debug_msg)
+                writer.writerow([
+                    channel_name,
+                    message.id,
+                    message.text,
+                    message.date
+                ])
 
             # Save images if present
             if message.media and isinstance(message.media, MessageMediaPhoto):
-                image_path = os.path.join(IMAGE_DATA_DIR, f"{channel_name}_{message.id}.jpg")
+                image_path = os.path.join(
+                    IMAGE_DATA_DIR,
+                    f"{channel_name}_{message.id}.jpg"
+                )
                 await client.download_media(message.media, file=image_path)
                 logger.info(f"Saved image: {image_path}")
 
@@ -67,8 +77,10 @@ async def scrape_channel(client, channel_name, writer):
         logger.error(f"Error scraping {channel_name}: {e}")
         return
 
-    logger.info(f"Scraping {channel_name} completed. "
-                f"{message_count} messages scraped.")
+    completion_msg = (
+        f"Scraping {channel_name} completed. {message_count} messages scraped."
+    )
+    logger.info(completion_msg)
 
 
 async def main():

@@ -18,10 +18,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python 3.8
+      - name: Set up Python 3.12.0
+
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.12.0
 
       - name: Install dependencies
         run: |
@@ -36,10 +37,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python 3.8
+      - name: Set up Python 3.12.0
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.12.0
 
       - name: Install flake8 for linting
         run: |
@@ -54,10 +55,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python 3.8
+      - name: Set up Python 3.12.0
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.12.0
 
       - name: Install dependencies
         run: |
@@ -90,10 +91,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python 3.8
+      - name: Set up Python 3.12.0
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.12.0
 
       - name: Install dependencies
         run: |
