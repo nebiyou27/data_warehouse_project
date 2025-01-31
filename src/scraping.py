@@ -6,6 +6,7 @@ from telethon import TelegramClient
 from telethon.tl.types import MessageMediaPhoto
 from src.logging_config import setup_logging
 
+
 # Load environment variables
 load_dotenv()
 
@@ -25,33 +26,33 @@ os.makedirs(IMAGE_DATA_DIR, exist_ok=True)
 csv_file_path = os.path.join(TEXT_DATA_DIR, "telegram_data.csv")
 
 # Maximum number of messages to scrape per channel
-MAX_MESSAGES = 10000  # Set the limit to 10,000
+MAX_MESSAGES = 10000 
 
 # Set up logging
 logger = setup_logging()
 
+
 async def scrape_channel(client, channel_name, writer):
     """
     Scrapes messages and images from a Telegram channel.
-    
+
     Args:
         client: The Telegram client instance.
         channel_name: The Telegram channel to scrape.
         writer: The CSV writer to write the scraped data.
     """
     logger.info(f"Scraping {channel_name} started.")
-    
     message_count = 0
 
     try:
         # Iterate through the messages in the channel
         async for message in client.iter_messages(channel_name):
             if message_count >= MAX_MESSAGES:
-                break  # Stop once we've scraped the maximum number of messages
+                break 
 
             # Save text messages
             if message.text:
-                logger.debug(f"Scraping message {message.id}: {message.text[:50]}...")  # Log the first 50 characters
+                logger.debug(f"Scraping message {message.id}: {message.text[:50]}...") 
                 writer.writerow([channel_name, message.id, message.text, message.date])
 
             # Save images if present
@@ -67,6 +68,7 @@ async def scrape_channel(client, channel_name, writer):
         return
 
     logger.info(f"Scraping {channel_name} completed. {message_count} messages scraped.")
+
 
 async def main():
     """
@@ -101,6 +103,7 @@ async def main():
 
     logger.info(f"Text data saved in {csv_file_path}")
     logger.info(f"Images saved in {IMAGE_DATA_DIR}")
+
 
 # Run the main function
 if __name__ == "__main__":
