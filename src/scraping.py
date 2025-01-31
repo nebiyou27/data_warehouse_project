@@ -41,12 +41,13 @@ csv_file_path = os.path.join(TEXT_DATA_DIR, "telegram_data.csv")
 
 async def scrape_channel(client, channel_name, writer, max_messages):
     """Scrape a limited number of messages and images from a Telegram channel."""
-    logger.info(f"Starting to scrape {channel_name} "
-                f"(Max {max_messages} messages)...")
+    logger.info(
+        f"Starting to scrape {channel_name} "
+        f"(Max {max_messages} messages)..."
+    )
 
     try:
-        async for message in client.iter_messages(channel_name,
-                                                  limit=max_messages):
+        async for message in client.iter_messages(channel_name, limit=max_messages):
             # Save text messages
             if message.text:
                 row = [channel_name, message.id, message.text, message.date]
@@ -89,3 +90,4 @@ async def main():
 if __name__ == "__main__":
     import asyncio
     asyncio.run(main())
+
