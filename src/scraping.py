@@ -5,7 +5,6 @@ from telethon import TelegramClient
 from telethon.tl.types import MessageMediaPhoto
 from src.logging_config import setup_logging
 
-
 # Load environment variables
 load_dotenv()
 
@@ -28,32 +27,22 @@ csv_file_path = os.path.join(TEXT_DATA_DIR, "telegram_data.csv")
 MAX_MESSAGES = 10000
 
 # Set up logging
-logger = setup_logging()  # Now accepts optional log_dir parameter
-
+logger = setup_logging()
 
 async def scrape_channel(client, channel_name, writer):
-    """
-    Scrapes messages and images from a Telegram channel.
-
-    Args:
-        client: The Telegram client instance.
-        channel_name: The Telegram channel to scrape.
-        writer: The CSV writer to write the scraped data.
-    """
+    """Scrapes messages and images from a Telegram channel."""
     logger.info(f"Scraping {channel_name} started.")
     message_count = 0
 
     try:
-        # Iterate through the messages in the channel
         async for message in client.iter_messages(channel_name):
             if message_count >= MAX_MESSAGES:
                 break
 
-            # Save text messages
             if message.text:
                 debug_msg = (
                     f"Scraping message {message.id}: {message.text[:50]}..."
-                )
+                )  # Line length fix
                 logger.debug(debug_msg)
                 writer.writerow([
                     channel_name,
@@ -62,12 +51,10 @@ async def scrape_channel(client, channel_name, writer):
                     message.date
                 ])
 
-            # Save images if present
             if message.media and isinstance(message.media, MessageMediaPhoto):
                 image_path = os.path.join(
-                    IMAGE_DATA_DIR,
-                    f"{channel_name}_{message.id}.jpg"
-                )
+                    IMAGE_DATA_DIR, f"{channel_name}_{message.id}.jpg"
+                )  # Line length fix
                 await client.download_media(message.media, file=image_path)
                 logger.info(f"Saved image: {image_path}")
 
@@ -77,36 +64,29 @@ async def scrape_channel(client, channel_name, writer):
         logger.error(f"Error scraping {channel_name}: {e}")
         return
 
-    completion_msg = (
+    logger.info(
         f"Scraping {channel_name} completed. {message_count} messages scraped."
-    )
-    logger.info(completion_msg)
+    )  # Line length fix
 
 
 async def main():
-    """
-    Main function to scrape messages from a list of channels.
-    """
-    # Initialize the Telegram client
+    """Main function to scrape messages from a list of channels."""
     async with TelegramClient('scraping_session', api_id, api_hash) as client:
         await client.start()
 
-        # Open CSV file for writing text data
         try:
             with open(csv_file_path, 'w', newline='', encoding='utf-8') as file:
                 writer = csv.writer(file)
                 writer.writerow(['Channel Name', 'Message ID', 'Message', 'Date'])
 
-                # List of channels to scrape
                 channels = [
                     "@DoctorsET",
                     "Chemed",
                     "@lobelia4cosmetics",
                     "@yetenaweg",
                     "@EAHCI",
-                ]
+                ]  # Line length fix
 
-                # Iterate over the channels and scrape data
                 for channel in channels:
                     await scrape_channel(client, channel, writer)
 
@@ -118,7 +98,6 @@ async def main():
     logger.info(f"Images saved in {IMAGE_DATA_DIR}")
 
 
-# Run the main function
 if __name__ == "__main__":
     import asyncio
     asyncio.run(main())

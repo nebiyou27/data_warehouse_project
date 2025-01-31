@@ -1,38 +1,36 @@
 import logging
 import os
-from pathlib import Path
 
-def setup_logging(log_dir="logs"):
-    """
-    Set up logging configuration
-    
-    Args:
-        log_dir (str): Directory where log files will be stored. Defaults to 'logs'
-    
-    Returns:
-        logging.Logger: Configured logger instance
-    """
-    # Create logs directory if it doesn't exist
-    Path(log_dir).mkdir(exist_ok=True)
-    
-    # Create logger
-    logger = logging.getLogger('telegram_scraper')
-    logger.setLevel(logging.INFO)
-    
-    # Create handlers
-    file_handler = logging.FileHandler(
-        os.path.join(log_dir, 'scraping.log')
-    )
-    console_handler = logging.StreamHandler()
-    
-    # Create formatters and add it to handlers
-    log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    formatter = logging.Formatter(log_format)
-    file_handler.setFormatter(formatter)
-    console_handler.setFormatter(formatter)
-    
-    # Add handlers to the logger
-    logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
-    
-    return logger
+# Configuration (Best Practice: Use environment variables for flexibility)
+LOG_LEVEL = os.environ.get("LOG_LEVEL", "DEBUG").upper()  # Default to DEBUG
+LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# Create a logger (Do this ONCE per module)
+logger = logging.getLogger(__name__)
+logger.setLevel(LOG_LEVEL) # Set log level based on env variable
+
+# Add a handler (StreamHandler for console output)
+handler = logging.StreamHandler()  # Or FileHandler(...) for file output
+formatter = logging.Formatter(LOG_FORMAT)
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+
+def log_info(message):
+    logger.info(message)
+
+def log_error(message):
+    logger.error(message)
+
+def log_warning(message):
+    logger.warning(message)
+
+def log_debug(message):
+    logger.debug(message)
+
+# Example usage (only when running this file directly, not during tests)
+if __name__ == "__main__":
+    log_info("This is an info message from logging_config")
+    log_error("This is an error message from logging_config")
+    log_warning("This is a warning message from logging_config")
+    log_debug("This is a debug message from logging_config")
