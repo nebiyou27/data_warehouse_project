@@ -41,13 +41,16 @@ csv_file_path = os.path.join(TEXT_DATA_DIR, "telegram_data.csv")
 
 async def scrape_channel(client, channel_name, writer, max_messages):
     """Scrape a limited number of messages and images from a Telegram channel."""
-    logger.info(
-        f"Starting to scrape {channel_name} (Max {max_messages} messages)..."
+    msg = (
+        f"Starting to scrape {channel_name} "
+        f"(Max {max_messages} messages)..."
     )
+    logger.info(msg)
 
     try:
-        async for message in client.iter_messages(channel_name, 
-                                                  limit=max_messages):
+        async for message in await client.get_messages(
+            channel_name, limit=max_messages
+        ):
             # Save text messages
             if message.text:
                 row = [channel_name, message.id, message.text, message.date]
@@ -63,31 +66,33 @@ async def scrape_channel(client, channel_name, writer, max_messages):
         logger.info(f"Scraping completed for {channel_name}")
 
     except Exception as e:
-        logger.error(f"Error scraping {channel_name}: {str(e)}", exc_info=True)
+        error_msg = f"Error scraping {channel_name}: {str(e)}"
+        logger.error(error_msg, exc_info=True)
 
 
 async def main():
-    async with TelegramClient('scraping_session', api_id, api_hash) as client:
-        with open(csv_file_path, 'w', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
-            headers = ['Channel Name', 'Message ID', 'Message', 'Date']
-            writer.writerow(headers)
+    client = TelegramClient('scraping_session', api_id, api_hash)
+    await client.start()
 
-            channels = [
-                "@Chemed",
-                "@lobelia4cosmetics",
-                "@yetenaweg",
-                "@EAHCI",
-                "@DoctorsET",
-            ]
+    with open(csv_file_path, 'w', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        headers = ['Channel Name', 'Message ID', 'Message', 'Date']
+        writer.writerow(headers)
 
-            for channel in channels:
-                await scrape_channel(client, channel, writer, max_messages=500)
+        channels = [
+            "@Chemed",
+            "@lobelia4cosmetics",
+            "@yetenaweg",
+            "@EAHCI",
+            "@DoctorsET",
+        ]
 
-        logger.info("Scraping task completed successfully!")
+        for channel in channels:
+            await scrape_channel(client, channel, writer, max_messages=500)
+
+    logger.info("Scraping task completed successfully!")
 
 
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
-
+    with TelegramClient('scraping_session', api_id, api_hash) as client:
+        client.loop.run_until_complete(main())
