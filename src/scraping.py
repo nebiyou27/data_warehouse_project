@@ -40,7 +40,7 @@ csv_file_path = os.path.join(TEXT_DATA_DIR, "telegram_data.csv")
 
 
 async def scrape_channel(client, channel_name, writer, max_messages):
-    """Scrape a limited number of messages and images from a Telegram channel."""
+    
     msg = (
         f"Starting to scrape {channel_name} "
         f"(Max {max_messages} messages)..."
