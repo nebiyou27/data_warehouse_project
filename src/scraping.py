@@ -29,7 +29,7 @@ logging.basicConfig(
     handlers=[
         logging.FileHandler(os.path.join(LOGS_DIR, "scraping.log")),
         logging.FileHandler(os.path.join(LOGS_DIR, "error.log")),
-        logging.StreamHandler()  # Also prints logs to console
+        logging.StreamHandler()
     ]
 )
 
@@ -71,9 +71,6 @@ async def scrape_channel(client, channel_name, writer, max_messages):
 
 
 async def main():
-    client = TelegramClient('scraping_session', api_id, api_hash)
-    await client.start()
-
     with open(csv_file_path, 'w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         headers = ['Channel Name', 'Message ID', 'Message', 'Date']
@@ -96,4 +93,3 @@ async def main():
 if __name__ == "__main__":
     with TelegramClient('scraping_session', api_id, api_hash) as client:
         client.loop.run_until_complete(main())
-        
