@@ -93,4 +93,3 @@ async def main():
 if __name__ == "__main__":
     with TelegramClient('scraping_session', api_id, api_hash) as client:
         client.loop.run_until_complete(main())
-        
