@@ -49,8 +49,7 @@ async def scrape_channel(client, channel_name, writer, max_messages):
 
     try:
         async for message in client.iter_messages(
-            channel_name, limit=max_messages
-        ):
+                channel_name, limit=max_messages):
             # Save text messages
             if message.text:
                 row = [channel_name, message.id, message.text, message.date]
