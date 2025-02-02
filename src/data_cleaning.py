@@ -5,17 +5,17 @@ import os
 import emoji
 
 # Define file paths
-raw_data_path = r"C:\Users\neba\Desktop\data_warehouse_project\data\raw\telegram_data.csv"
-cleaned_data_dir = r"C:\Users\neba\Desktop\data_warehouse_project\data\cleaned"
-cleaned_data_path = os.path.join(cleaned_data_dir, "cleaned_telegram_data.csv")
+RAW_DATA_PATH = r"C:\Users\neba\Desktop\data_warehouse_project\data\raw\telegram_data.csv"
+CLEANED_DATA_DIR = r"C:\Users\neba\Desktop\data_warehouse_project\data\cleaned"
+CLEANED_DATA_PATH = os.path.join(CLEANED_DATA_DIR, "cleaned_telegram_data.csv")
 
 # Ensure the cleaned data directory exists
-os.makedirs(cleaned_data_dir, exist_ok=True)
+os.makedirs(CLEANED_DATA_DIR, exist_ok=True)
 
 # Configure logging
-log_file = os.path.join(cleaned_data_dir, "data_cleaning.log")
+LOG_FILE = os.path.join(CLEANED_DATA_DIR, "data_cleaning.log")
 logging.basicConfig(
-    filename=log_file,
+    filename=LOG_FILE,
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
@@ -23,8 +23,9 @@ logging.basicConfig(
 print("🚀 Data Cleaning Started...")
 logging.info("🚀 Data Cleaning Log initialized successfully!")
 
+
 def load_csv(file_path):
-    """ Load CSV file into a Pandas DataFrame. """
+    """Load CSV file into a Pandas DataFrame."""
     try:
         df = pd.read_csv(file_path)
         logging.info(f"✅ CSV file '{file_path}' loaded successfully.")
@@ -34,66 +35,74 @@ def load_csv(file_path):
         logging.error(f"❌ Error loading CSV file: {e}")
         raise
 
+
 def extract_emojis(text):
-    """ Extract emojis from text, return 'No emoji' if none found. """
-    emojis = ''.join(c for c in text if c in emoji.EMOJI_DATA)
+    """Extract emojis from text, return 'No emoji' if none found."""
+    emojis = "".join(c for c in text if c in emoji.EMOJI_DATA)
     return emojis if emojis else "No emoji"
 
+
 def remove_emojis(text):
-    """ Remove emojis from the message text. """
-    return ''.join(c for c in text if c not in emoji.EMOJI_DATA)
+    """Remove emojis from the message text."""
+    return "".join(c for c in text if c not in emoji.EMOJI_DATA)
+
 
 def extract_youtube_links(text):
-    """ Extract YouTube links from text, return 'No YouTube link' if none found. """
+    """Extract YouTube links from text, return 'No YouTube link' if none found."""
     youtube_pattern = r"(https?://(?:www\.)?(?:youtube\.com|youtu\.be)/[^\s]+)"
     links = re.findall(youtube_pattern, text)
-    return ', '.join(links) if links else "No YouTube link"
+    return ", ".join(links) if links else "No YouTube link"
+
 
 def remove_youtube_links(text):
-    """ Remove YouTube links from the message text. """
+    """Remove YouTube links from the message text."""
     youtube_pattern = r"https?://(?:www\.)?(?:youtube\.com|youtu\.be)/[^\s]+"
-    return re.sub(youtube_pattern, '', text).strip()
+    return re.sub(youtube_pattern, "", text).strip()
+
 
 def clean_text(text):
-    """ Standardize text by removing newline characters and unnecessary spaces. """
+    """Standardize text by removing newline characters and unnecessary spaces."""
     if pd.isna(text):
         return "No Message"
-    return re.sub(r'\n+', ' ', text).strip()
+    return re.sub(r"\n+", " ", text).strip()
+
 
 def clean_dataframe(df):
-    """ Perform all cleaning and standardization steps. """
+    """Perform all cleaning and standardization steps."""
     try:
         # ✅ Rename columns to standard names
-        df = df.rename(columns={
-            "Channel Name": "channel_name",
-            "Message ID": "message_id",
-            "Message": "text",
-            "Date": "date"
-        })
+        df = df.rename(
+            columns={
+                "Channel Name": "channel_name",
+                "Message ID": "message_id",
+                "Message": "text",
+                "Date": "date",
+            }
+        )
 
         # ✅ Convert Date to datetime format
-        df.loc[:, 'date'] = pd.to_datetime(df['date'], errors='coerce')
-        df.loc[:, 'date'] = df['date'].where(df['date'].notna(), None)
+        df.loc[:, "date"] = pd.to_datetime(df["date"], errors="coerce")
+        df.loc[:, "date"] = df["date"].where(df["date"].notna(), None)
         logging.info("✅ Date column formatted to datetime.")
 
         # ✅ Fill missing values
-        df.loc[:, 'text'] = df['text'].fillna("No Message")
+        df.loc[:, "text"] = df["text"].fillna("No Message")
         logging.info("✅ Missing values filled.")
 
         # ✅ Standardize text columns
-        df.loc[:, 'channel_name'] = df['channel_name'].str.strip()
-        df.loc[:, 'text'] = df['text'].apply(clean_text)
+        df.loc[:, "channel_name"] = df["channel_name"].str.strip()
+        df.loc[:, "text"] = df["text"].apply(clean_text)
         logging.info("✅ Text columns standardized.")
 
         # ✅ Extract emojis and store them in a new column
-        df.loc[:, 'emoji_used'] = df['text'].apply(extract_emojis)
+        df.loc[:, "emoji_used"] = df["text"].apply(extract_emojis)
         logging.info("✅ Emojis extracted and stored in 'emoji_used' column.")
-        
+
         # ✅ Remove emojis from message text
-        df.loc[:, 'text'] = df['text'].apply(remove_emojis)
+        df.loc[:, "text"] = df["text"].apply(remove_emojis)
 
         # ✅ Remove YouTube links from message text
-        df.loc[:, 'text'] = df['text'].apply(remove_youtube_links)
+        df.loc[:, "text"] = df["text"].apply(remove_youtube_links)
 
         # ✅ Remove duplicates
         df = df.drop_duplicates()
@@ -102,12 +111,14 @@ def clean_dataframe(df):
         logging.info("✅ Data cleaning completed successfully.")
         print("✅ Data cleaning completed successfully.")
         return df
+
     except Exception as e:
         logging.error(f"❌ Data cleaning error: {e}")
         raise
 
+
 def save_cleaned_data(df, output_path):
-    """ Save cleaned data to a new CSV file. """
+    """Save cleaned data to a new CSV file."""
     try:
         df.to_csv(output_path, index=False)
         logging.info(f"✅ Cleaned data saved successfully to '{output_path}'.")
@@ -116,9 +127,10 @@ def save_cleaned_data(df, output_path):
         logging.error(f"❌ Error saving cleaned data: {e}")
         raise
 
+
 # Run the data cleaning process
-df = load_csv(raw_data_path)
+df = load_csv(RAW_DATA_PATH)
 df_cleaned = clean_dataframe(df)
-save_cleaned_data(df_cleaned, cleaned_data_path)
+save_cleaned_data(df_cleaned, CLEANED_DATA_PATH)
 
 print("🚀 Cleaning Process Completed!")
