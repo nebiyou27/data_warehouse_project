@@ -17,7 +17,9 @@ CLEANED_DATA_PATH = (
 )
 
 # Configure logging
-LOG_FILE = os.path.join(os.path.dirname(CLEANED_DATA_PATH), "store_cleaned_data.log")
+LOG_FILE = os.path.join(
+    os.path.dirname(CLEANED_DATA_PATH), "store_cleaned_data.log"
+)
 logging.basicConfig(
     filename=LOG_FILE,
     level=logging.INFO,
