@@ -82,7 +82,7 @@ def create_table(cursor, conn):
 def insert_cleaned_data(df, cursor, conn):
     """Insert cleaned data into the database, avoiding duplicate entries."""
     insert_query = """
-    INSERT INTO telegram_messages (channel_name, message_id, text, date, 
+        INSERT INTO telegram_messages (channel_name, message_id, text, date,
                                    emoji_used)
     VALUES (%s, %s, %s, %s, %s)
     ON CONFLICT (message_id) DO NOTHING;
