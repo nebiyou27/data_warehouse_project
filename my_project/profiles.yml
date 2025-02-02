@@ -1,0 +1,12 @@
+my_project:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      user: postgres
+      password: neba
+      dbname: telegram_data
+      schema: public
+      port: 5432
+      threads: 1  

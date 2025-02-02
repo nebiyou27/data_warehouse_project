@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: raw_data_transformation
+    description: "This model processes raw Telegram data"
+    columns:
+      - name: date
+        description: "The date the message was sent"
+        tests:
+          - not_null
+      - name: message_id
+        description: "The unique identifier for each message"
+        tests:
+          - unique
